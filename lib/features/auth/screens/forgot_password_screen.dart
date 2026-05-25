@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 
-class ForgotPasswordScreen extends StatelessWidget{
+class ForgotPasswordScreen extends StatefulWidget{
   const ForgotPasswordScreen({super.key});
-  
+
+  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+}
+
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>{
+
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      body: Center(
-        child: Text("Forgot password"),
+      body: SafeArea(
+        child: Text("ForgotPassword"),
       ),
     );
   }
