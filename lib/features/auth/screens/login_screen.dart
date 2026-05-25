@@ -73,6 +73,7 @@ class _LoginScreenState extends State<LoginScreen>{
                 //Champ password
 
                 PasswordField(
+                  hintText: "Mot de passe",
                   controller: passwordController,
                   validator: (value) {
                     if(value==null || value.isEmpty){
@@ -94,7 +95,12 @@ class _LoginScreenState extends State<LoginScreen>{
                     onTap: () {
                       Navigator.pushNamed(context, AppRoutes.forgotPassword);
                     },
-                    child: Text("Mot de passe oublie ?"),
+                    child: Text(
+                      "Mot de passe oublie ?",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
                   ),
                 ),
 
@@ -116,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen>{
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Pas de compte ?"),
+                    Text("Pas de compte ?  "),
                     GestureDetector(
                       onTap: () {
                         Navigator.pushNamed(context, AppRoutes.register);

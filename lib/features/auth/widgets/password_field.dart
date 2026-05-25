@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 class PasswordField extends StatefulWidget{
   final TextEditingController controller;
 
+  final String hintText;
+
   final String? Function(String?)? validator;
 
   const PasswordField({
     super.key,
     required this.controller,
+    required this.hintText,
     this.validator
 });
 
@@ -27,7 +30,7 @@ class _PasswordFieldState extends State<PasswordField>{
       controller: widget.controller,
       obscureText: isObscure,
       decoration: InputDecoration(
-        hintText: "Mot de passe",
+        hintText: widget.hintText,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10)
         ),
