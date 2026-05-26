@@ -1,0 +1,25 @@
+
+
+import 'package:dio/dio.dart';
+
+class ApiClient{
+  late Dio dio;
+
+  ApiClient(){
+    dio=Dio(
+      BaseOptions(
+        //URL du backend
+        baseUrl: "http://10.0.2.2:8081/api/",
+
+        //Temps maximum d'attente
+        connectTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 10),
+
+        //Headers par defaut
+        headers: {
+          "Content-Type":"application/json",
+        }
+      )
+    );
+  }
+}

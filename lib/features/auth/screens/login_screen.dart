@@ -1,5 +1,6 @@
 import 'package:ecommerce_mobile/core/widgets/custom_button.dart';
 import 'package:ecommerce_mobile/core/widgets/custom_textfield.dart';
+import 'package:ecommerce_mobile/features/auth/services/auth_service.dart';
 import 'package:ecommerce_mobile/features/auth/widgets/password_field.dart';
 import 'package:ecommerce_mobile/routes/app_routes.dart';
 import 'package:flutter/material.dart';
@@ -13,12 +14,41 @@ class LoginScreen extends StatefulWidget{
 
 
 class _LoginScreenState extends State<LoginScreen>{
+  final AuthService authService=AuthService();
+
+  bool isLoading =false;
 
   final _formKey=GlobalKey<FormState>();
 
   final TextEditingController emailController= TextEditingController();
 
   final TextEditingController passwordController=TextEditingController();
+
+  Future<void> loginUser() async{
+    if(_formKey.currentState!.validate()){
+      try{
+        setState(() {
+          isLoading=true;
+        });
+        final response=await authService.login(email: emailController.text.trim(), password: passwordController.text);
+
+        //Succes
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(response.message))
+        );
+
+        Navigator.pushReplacementNamed(context, AppRoutes.home);
+      } catch(e){
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()))
+        );
+      } finally{
+        setState(() {
+          isLoading=false;
+        });
+      }
+    }
+  }
 
 
   @override
@@ -109,12 +139,8 @@ class _LoginScreenState extends State<LoginScreen>{
                 //Bouton de connexion
 
                 CustomButton(
-                  text: "Connexion",
-                  onPressed: () {
-                    if(_formKey.currentState!.validate()){
-                      Navigator.pushReplacementNamed(context, AppRoutes.home);
-                    }
-                  },
+                  text: isLoading ? "chargement...":"Connexion",
+                  onPressed: loginUser
                 ),
 
                 SizedBox(height: 20,),

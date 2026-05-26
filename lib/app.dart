@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget{
       routes: {
         AppRoutes.splash:(context) => const SplashScreen(),
 
-        AppRoutes.home:(context) =>const HomeScreen(),
+        AppRoutes.home:(context) => HomeScreen(),
 
         AppRoutes.forgotPassword:(context) =>ForgotPasswordScreen(),
 

@@ -1,5 +1,6 @@
 import 'package:ecommerce_mobile/core/widgets/custom_button.dart';
 import 'package:ecommerce_mobile/core/widgets/custom_textfield.dart';
+import 'package:ecommerce_mobile/features/auth/services/auth_service.dart';
 import 'package:ecommerce_mobile/features/auth/widgets/password_field.dart';
 import 'package:ecommerce_mobile/routes/app_routes.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,9 @@ class RegisterScreen extends StatefulWidget{
 }
 
 class _RegisterScreenState extends State<RegisterScreen>{
+  bool isLoading =false;
+
+  final AuthService authService=AuthService();
 
   final _formKey =GlobalKey<FormState>();
 
@@ -25,6 +29,33 @@ class _RegisterScreenState extends State<RegisterScreen>{
   final TextEditingController passwordController=TextEditingController();
 
   final TextEditingController confirmPasswordController=TextEditingController();
+
+  Future<void> registerUser() async{
+    if(_formKey.currentState!.validate()){
+      try{
+        setState(() {
+          isLoading=true;
+        });
+
+        final response=await authService.register(firstName: firstNameController.text.trim(), lastName: lastNameController.text.trim(), email: emailController.text.trim(), phone: phoneController.text.trim(), password: passwordController.text);
+
+        //Succes
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(response.message))
+        );
+
+        Navigator.pushReplacementNamed(context,AppRoutes.home);
+      } catch(e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(e.toString())),
+          );
+      } finally {
+        setState(() {
+          isLoading=false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context){
@@ -126,7 +157,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
                     //Password
                     PasswordField(
                       controller: passwordController,
-                      hintText: "Confirmer le mot de passe",
+                      hintText: "Mot de passe",
                       validator: (value) {
                         if(value==null || value.isEmpty){
                           return "Mot de passe obligatoire";
@@ -162,11 +193,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
 
                     CustomButton(
                       text: "S'inscrire",
-                      onPressed: () {
-                        if(_formKey.currentState!.validate()){
-                          Navigator.pushReplacementNamed(context, AppRoutes.home);
-                        }
-                      },
+                      onPressed: registerUser,
                     ),
 
                     SizedBox(height: 20,),
