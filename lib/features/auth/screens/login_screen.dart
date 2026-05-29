@@ -44,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen>{
           SnackBar(content: Text(response.message))
         );
 
-        Navigator.pushReplacementNamed(context, AppRoutes.home);
+        Navigator.pushReplacementNamed(context, AppRoutes.main);
       } catch(e){
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.toString()))

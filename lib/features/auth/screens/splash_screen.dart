@@ -37,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     String? token =await storageService.getToken();
 
     if(token!=null){
-      Navigator.pushReplacementNamed(context, AppRoutes.home);
+      Navigator.pushReplacementNamed(context, AppRoutes.main);
     } else{
       Navigator.pushReplacementNamed(context, AppRoutes.login);
     }
