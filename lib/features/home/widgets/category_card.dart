@@ -1,63 +1,93 @@
 import 'package:flutter/material.dart';
 
-class CategoryCard extends StatelessWidget{
+const primaryColor = Color(0xFFD22922);
+const darkColor = Color(0xFF6F1A2A);
+
+class CategoryCard extends StatelessWidget {
   final String title;
-
   final IconData icon;
-
   final VoidCallback onTap;
 
   const CategoryCard({
     super.key,
     required this.onTap,
     required this.icon,
-    required this.title
-});
+    required this.title,
+  });
+
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         width: 100,
-        margin: EdgeInsets.only(
-          right: 15,
-        ),
-        padding: EdgeInsets.symmetric(
+        margin: const EdgeInsets.only(right: 15),
+        padding: const EdgeInsets.symmetric(
           vertical: 15,
-          horizontal: 10
+          horizontal: 10,
         ),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(15),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white,
+              primaryColor.withOpacity(0.05),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: primaryColor.withOpacity(0.2),
+            width: 1,
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black12,
-              blurRadius: 5,
-              offset: Offset(0,3)
-            )
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
           ],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            //Icon
-            Icon(
-              icon,
-              size: 35,
-              color: Colors.red,
+            // Icon avec fond décoratif
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [primaryColor, darkColor],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: primaryColor.withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Icon(
+                icon,
+                size: 28,
+                color: Colors.white,
+              ),
             ),
 
-            SizedBox(height: 10,),
+            const SizedBox(height: 12),
 
-            //Title
+            // Title
             Text(
               title,
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: darkColor,
               ),
             ),
           ],
@@ -65,5 +95,4 @@ class CategoryCard extends StatelessWidget{
       ),
     );
   }
-
 }

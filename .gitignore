@@ -10,6 +10,11 @@
 .svn/
 migrate_working_dir/
 
+
+# Android Gradle configs (si tu veux éviter tracking)
+android/build.gradle
+android/settings.gradle
+android/gradle/wrapper/gradle-wrapper.properties
 # IntelliJ related
 *.iml
 *.ipr

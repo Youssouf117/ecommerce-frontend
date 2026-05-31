@@ -35,13 +35,12 @@ class AuthService{
   }
 
   //Register
-  Future<AuthResponse> register({required String firstName,required String lastName,required String email,required String phone,required String password}) async {
+  Future<AuthResponse> register({required String username,required String email,required String phone,required String password}) async {
     try{
       final response=await apiClient.dio.post(
         "auth/register",
         data: {
-          "firstName":firstName,
-          "lastName":lastName,
+          "username":username,
           "email":email,
           "phone":phone,
           "password":password

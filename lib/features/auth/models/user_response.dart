@@ -2,9 +2,8 @@
 class UserResponse{
   final int id;
 
-  final String firstName;
 
-  final String lastName;
+  final String username;
 
   final String email;
 
@@ -14,14 +13,13 @@ class UserResponse{
 
   UserResponse({
     required this.id,
-    required this.firstName,
-    required this.lastName,
+    required this.username,
     required this.email,
     required this.phone,
     required this.role
 });
 
   factory UserResponse.fromJson(Map<String,dynamic> json){
-    return UserResponse(id: json["id"], firstName: json["firstName"], lastName: json["lastName"], email: json["email"], phone: json["phone"], role:json["role"]);
+    return UserResponse(id: json["id"], username: json["username"], email: json["email"], phone: json["phone"], role:json["role"]);
   }
 }
