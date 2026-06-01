@@ -4,10 +4,12 @@ import 'package:ecommerce_mobile/features/home/widgets/product_card.dart';
 import 'package:ecommerce_mobile/features/home/widgets/search_bar_widget.dart';
 import 'package:ecommerce_mobile/routes/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 const primaryColor = Color(0xFFD22922);
 const darkColor = Color(0xFF6F1A2A);
 const background = Color(0xFFFDFDFD);
+const goldColor = Color(0xFFFFD700);
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -35,6 +37,28 @@ class _HomeScreenState extends State<HomeScreen> {
             const Icon(Icons.check_circle, color: Colors.white, size: 20),
             const SizedBox(width: 10),
             Text("$productName ajouté au panier"),
+          ],
+        ),
+        backgroundColor: primaryColor,
+        duration: const Duration(seconds: 1),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        margin: const EdgeInsets.all(10),
+      ),
+    );
+  }
+
+  void copyPromoCode(String promoCode) {
+    Clipboard.setData(ClipboardData(text: promoCode));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: const [
+            Icon(Icons.copy, color: Colors.white, size: 18),
+            SizedBox(width: 8),
+            Text("Code promo copié !"),
           ],
         ),
         backgroundColor: primaryColor,
@@ -281,7 +305,178 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     
-                    SizedBox(height: screenHeight * 0.03),
+                    SizedBox(height: screenHeight * 0.02),
+                    
+                    // BANNIÈRE CODE PROMO - VERSION PREMIUM AMÉLIORÉE
+                    Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [goldColor, primaryColor],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(screenWidth * 0.03),
+                        boxShadow: [
+                          BoxShadow(
+                            color: goldColor.withOpacity(0.4),
+                            blurRadius: screenWidth * 0.02,
+                            offset: Offset(0, screenWidth * 0.008),
+                          ),
+                        ],
+                      ),
+                      child: Stack(
+                        children: [
+                          // Icône de fond décorative
+                          Positioned(
+                            right: -10,
+                            top: -10,
+                            child: Icon(
+                              Icons.local_offer,
+                              size: screenWidth * 0.15,
+                              color: Colors.white.withOpacity(0.1),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(screenWidth * 0.03),
+                            child: Row(
+                              children: [
+                                // Icône principale avec animation
+                                Container(
+                                  padding: EdgeInsets.all(screenWidth * 0.02),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.1),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 3),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Icon(
+                                    Icons.local_offer,
+                                    color: primaryColor,
+                                    size: screenWidth * 0.05,
+                                  ),
+                                ),
+                                SizedBox(width: screenWidth * 0.03),
+                                
+                                // Texte du code promo
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "CODE PROMO EXCLUSIF",
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white70,
+                                          letterSpacing: 1.5,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "KANDARA20",
+                                            style: TextStyle(
+                                              fontSize: sectionFontSize * 0.8,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                              letterSpacing: 2,
+                                              shadows: [
+                                                Shadow(
+                                                  color: Colors.black.withOpacity(0.2),
+                                                  blurRadius: 2,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 8,
+                                              vertical: 3,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.circular(12),
+                                            ),
+                                            child: Text(
+                                              "-20%",
+                                              style: TextStyle(
+                                                fontSize: subtitleFontSize * 0.6,
+                                                fontWeight: FontWeight.bold,
+                                                color: primaryColor,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        "Sur votre première commande",
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.white.withOpacity(0.9),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                
+                                // Bouton Copier stylisé
+                                GestureDetector(
+                                  onTap: () => copyPromoCode("KANDARA20"),
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: screenWidth * 0.04,
+                                      vertical: screenHeight * 0.012,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(screenWidth * 0.04),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.15),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 3),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.copy,
+                                          size: screenWidth * 0.04,
+                                          color: primaryColor,
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Text(
+                                          "COPIEZ",
+                                          style: TextStyle(
+                                            fontSize: subtitleFontSize * 0.65,
+                                            fontWeight: FontWeight.bold,
+                                            color: primaryColor,
+                                            letterSpacing: 1,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    
+                    SizedBox(height: screenHeight * 0.02),
                     
                     // Search Bar
                     SearchBarWidget(controller: searchController, onSearch: () {}),
