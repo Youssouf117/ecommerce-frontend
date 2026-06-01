@@ -1,97 +1,207 @@
 import 'package:flutter/material.dart';
 
-class ProductCard extends StatelessWidget{
+const primaryColor = Color(0xFFD22922);
+const darkColor = Color(0xFF6F1A2A);
+
+class ProductCard extends StatelessWidget {
   final String name;
-
   final double price;
-
   final String imageUrl;
-
   final VoidCallback onTap;
+  final VoidCallback? onAddToCart;
 
   const ProductCard({
     super.key,
     required this.name,
     required this.price,
     required this.imageUrl,
-    required this.onTap
-});
+    required this.onTap,
+    this.onAddToCart,
+  });
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        width: 170,
-        margin: EdgeInsets.only(
-          right: 15
+      child: AnimatedContainer(
+        duration: const Duration(
+          milliseconds: 200,
+        ),
+        width: 180,
+        margin: const EdgeInsets.only(
+          right: 15,
         ),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(15),
+          borderRadius:
+              BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black12,
-              blurRadius: 5,
-              offset: Offset(0,3)
-            )
+              color:
+                  Colors.black.withOpacity(0.08),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
           ],
         ),
-
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment:
+              CrossAxisAlignment.start,
           children: [
-            //Image
             ClipRRect(
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(15)
+              borderRadius:
+                  const BorderRadius.vertical(
+                top: Radius.circular(20),
               ),
               child: Image.network(
                 imageUrl,
                 height: 140,
                 width: double.infinity,
                 fit: BoxFit.cover,
+                loadingBuilder: (
+                  context,
+                  child,
+                  loadingProgress,
+                ) {
+                  if (loadingProgress ==
+                      null) {
+                    return child;
+                  }
+
+                  return Container(
+                    height: 140,
+                    color: Colors.grey[100],
+                    child: Center(
+                      child:
+                          CircularProgressIndicator(
+                        color: primaryColor,
+                        strokeWidth: 2,
+                        value: loadingProgress
+                                    .expectedTotalBytes !=
+                                null
+                            ? loadingProgress
+                                    .cumulativeBytesLoaded /
+                                loadingProgress
+                                    .expectedTotalBytes!
+                            : null,
+                      ),
+                    ),
+                  );
+                },
+                errorBuilder: (
+                  context,
+                  error,
+                  stackTrace,
+                ) {
+                  return Container(
+                    height: 140,
+                    color: Colors.grey[200],
+                    child: const Column(
+                      mainAxisAlignment:
+                          MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons
+                              .image_not_supported,
+                          size: 40,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          "Image non disponible",
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
-            
+
             Padding(
-              padding: EdgeInsets.all(10),
+              padding:
+                  const EdgeInsets.all(12),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment:
+                    CrossAxisAlignment.start,
                 children: [
-                  //Nom du produit
                   Text(
                     name,
                     maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold
+                    overflow:
+                        TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight:
+                          FontWeight.bold,
+                      color: darkColor,
                     ),
                   ),
-                  
-                  SizedBox(height: 8,),
-                  
-                  //Price
+
+                  const SizedBox(height: 6),
+
                   Text(
                     "${price.toStringAsFixed(0)} FCFA",
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.red,
-                      fontWeight: FontWeight.w600,
-                    )
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: primaryColor,
+                      fontWeight:
+                          FontWeight.bold,
+                    ),
                   ),
-                  
-                  SizedBox(height: 10,),
-                  
-                  //Bouton panier
+
+                  const SizedBox(height: 12),
+
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
-                      child: Text("Ajouter"),
+                      onPressed:
+                          onAddToCart ?? () {},
+                      style:
+                          ElevatedButton.styleFrom(
+                        backgroundColor:
+                            primaryColor,
+                        foregroundColor:
+                            Colors.white,
+                        elevation: 0,
+                        padding:
+                            const EdgeInsets.symmetric(
+                          vertical: 10,
+                        ),
+                        shape:
+                            RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(
+                            12,
+                          ),
+                        ),
+
+                      ),
+                      child: const Row(
+                        mainAxisAlignment:
+                            MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons
+                                .add_shopping_cart,
+                            size: 16,
+                          ),
+                          SizedBox(width: 6),
+                          Text(
+                            "Ajouter",
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight:
+                                  FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
