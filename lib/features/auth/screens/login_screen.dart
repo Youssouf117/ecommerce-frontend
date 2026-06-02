@@ -9,56 +9,87 @@ const primaryColor = Color(0xFFD22922);
 const darkColor = Color(0xFF6F1A2A);
 const background = Color(0xFFFDFDFD);
 
-
-
-
-class LoginScreen extends StatefulWidget{
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
+class _LoginScreenState extends State<LoginScreen> {
+  final AuthService authService = AuthService();
+  bool isLoading = false;
+  String? errorMessage;
 
-class _LoginScreenState extends State<LoginScreen>{
-  final AuthService authService=AuthService();
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
-  bool isLoading =false;
+  Future<void> loginUser() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+        errorMessage = null;
+      });
 
-  final _formKey=GlobalKey<FormState>();
-
-  final TextEditingController emailController= TextEditingController();
-
-  final TextEditingController passwordController=TextEditingController();
-
-  Future<void> loginUser() async{
-    if(_formKey.currentState!.validate()){
-      try{
-        setState(() {
-          isLoading=true;
-        });
-        final response=await authService.login(email: emailController.text.trim(), password: passwordController.text);
-
-        //Succes
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(response.message))
+      try {
+        final response = await authService.login(
+          email: emailController.text.trim(),
+          password: passwordController.text,
         );
 
-        Navigator.pushReplacementNamed(context, AppRoutes.main);
-      } catch(e){
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Email ou mot de passe incorrect"))
-        );
-      } finally{
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  const Icon(Icons.check_circle, color: Colors.white, size: 20),
+                  const SizedBox(width: 10),
+                  Expanded(child: Text(response.message)),
+                ],
+              ),
+              backgroundColor: primaryColor,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              duration: const Duration(seconds: 2),
+            ),
+          );
+          Navigator.pushReplacementNamed(context, AppRoutes.main);
+        }
+      } catch (e) {
         setState(() {
-          isLoading=false;
+          errorMessage = "Email ou mot de passe incorrect";
         });
+      } finally {
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
       }
     }
   }
-  
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final isTablet = screenWidth >= 600;
+    final isDesktop = screenWidth >= 1200;
+
+    final logoSize = isDesktop ? 140.0 : (isTablet ? 130.0 : 120.0);
+    final titleFontSize = isDesktop ? 36.0 : (isTablet ? 32.0 : 28.0);
+    final paddingHorizontal = screenWidth * 0.06;
+
     return Scaffold(
       backgroundColor: background,
       body: Stack(
@@ -84,18 +115,18 @@ class _LoginScreenState extends State<LoginScreen>{
           SafeArea(
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(24),
+                padding: EdgeInsets.symmetric(horizontal: paddingHorizontal, vertical: 20),
                 child: Form(
                   key: _formKey,
                   child: Column(
-                    crossAxisAlignment:
-                    CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const SizedBox(height: 30),
+                      SizedBox(height: screenHeight * 0.02),
 
+                      // Logo
                       Container(
-                        width: 120,
-                        height: 120,
+                        width: logoSize,
+                        height: logoSize,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
@@ -113,18 +144,18 @@ class _LoginScreenState extends State<LoginScreen>{
                         child: ClipOval(
                           child: Image.asset(
                             'assets/images/logo.jpg',
-                            width: 120,
-                            height: 120,
+                            width: logoSize,
+                            height: logoSize,
                             fit: BoxFit.cover,
                           ),
                         ),
                       ),
 
-                      const SizedBox(height: 20),
+                      SizedBox(height: screenHeight * 0.02),
 
+                      // Motif décoratif
                       Row(
-                        mainAxisAlignment:
-                        MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
                             width: 40,
@@ -149,12 +180,13 @@ class _LoginScreenState extends State<LoginScreen>{
                         ],
                       ),
 
-                      const SizedBox(height: 20),
+                      SizedBox(height: screenHeight * 0.02),
 
+                      // Titre
                       Text(
                         "MAISON KANDARA",
                         style: TextStyle(
-                          fontSize: 28,
+                          fontSize: titleFontSize,
                           fontWeight: FontWeight.bold,
                           color: darkColor,
                           letterSpacing: 2,
@@ -168,60 +200,114 @@ class _LoginScreenState extends State<LoginScreen>{
                         ),
                       ),
 
-                      const SizedBox(height: 10),
+                      SizedBox(height: screenHeight * 0.01),
 
                       Text(
                         "Bienvenue dans l'élégance africaine",
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: screenWidth * 0.035,
                           color: primaryColor,
                           fontWeight: FontWeight.w500,
                           letterSpacing: 1,
                         ),
                       ),
 
-                      const SizedBox(height: 40),
+                      SizedBox(height: screenHeight * 0.04),
 
+                      // Message d'erreur design
+                      if (errorMessage != null) ...[
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.red.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: Colors.red.withOpacity(0.3),
+                              width: 1,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: Colors.red.withOpacity(0.2),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.error_outline,
+                                  color: Colors.red,
+                                  size: 18,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  errorMessage!,
+                                  style: const TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    errorMessage = null;
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(4),
+                                  child: const Icon(
+                                    Icons.close,
+                                    color: Colors.red,
+                                    size: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: screenHeight * 0.02),
+                      ],
+
+                      // Champ Email
                       CustomTextField(
                         hintText: "Email",
                         controller: emailController,
-                        keyboardType:
-                        TextInputType.emailAddress,
+                        keyboardType: TextInputType.emailAddress,
                         validator: (value) {
-                          if (value == null ||
-                              value.isEmpty) {
+                          if (value == null || value.isEmpty) {
                             return "Email obligatoire";
                           }
-
                           if (!value.contains('@')) {
                             return "Email invalide";
                           }
-
                           return null;
                         },
                       ),
 
-                      const SizedBox(height: 20),
+                      SizedBox(height: screenHeight * 0.02),
 
+                      // Champ Mot de passe
                       PasswordField(
                         hintText: "Mot de passe",
                         controller: passwordController,
                         validator: (value) {
-                          if (value == null ||
-                              value.isEmpty) {
+                          if (value == null || value.isEmpty) {
                             return "Mot de passe obligatoire";
                           }
-
                           if (value.length < 6) {
                             return "6 caractères minimum";
                           }
-
                           return null;
                         },
                       ),
 
-                      const SizedBox(height: 15),
+                      SizedBox(height: screenHeight * 0.015),
 
+                      // Mot de passe oublié
                       Align(
                         alignment: Alignment.centerRight,
                         child: GestureDetector(
@@ -231,33 +317,30 @@ class _LoginScreenState extends State<LoginScreen>{
                               AppRoutes.forgotPassword,
                             );
                           },
-                          child: const Text(
+                          child: Text(
                             "Mot de passe oublié ?",
                             style: TextStyle(
                               color: primaryColor,
                               fontWeight: FontWeight.w600,
-                              fontSize: 13,
+                              fontSize: screenWidth * 0.035,
                             ),
                           ),
                         ),
                       ),
 
-                      const SizedBox(height: 35),
+                      SizedBox(height: screenHeight * 0.04),
 
+                      // Bouton de connexion
                       Container(
                         width: double.infinity,
                         height: 55,
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
-                            colors: [
-                              primaryColor,
-                              darkColor,
-                            ],
+                            colors: [primaryColor, darkColor],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
-                          borderRadius:
-                          BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(30),
                           boxShadow: [
                             BoxShadow(
                               color: primaryColor.withOpacity(0.4),
@@ -267,109 +350,100 @@ class _LoginScreenState extends State<LoginScreen>{
                           ],
                         ),
                         child: ElevatedButton(
-                          onPressed: loginUser,
+                          onPressed: isLoading ? null : loginUser,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                            Colors.transparent,
-                            shadowColor:
-                            Colors.transparent,
+                            backgroundColor: Colors.transparent,
+                            shadowColor: Colors.transparent,
                             shape: RoundedRectangleBorder(
-                              borderRadius:
-                              BorderRadius.circular(30),
+                              borderRadius: BorderRadius.circular(30),
                             ),
                           ),
-                          child: const Text(
-                            "SE CONNECTER",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              letterSpacing: 2,
-                            ),
-                          ),
+                          child: isLoading
+                              ? const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Text(
+                                  "SE CONNECTER",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    letterSpacing: 2,
+                                  ),
+                                ),
                         ),
                       ),
 
-                      const SizedBox(height: 25),
+                      SizedBox(height: screenHeight * 0.03),
 
+                      // Séparateur
                       Row(
                         children: [
                           Expanded(
                             child: Divider(
-                              color: primaryColor
-                                  .withOpacity(0.3),
+                              color: primaryColor.withOpacity(0.3),
                               thickness: 1,
                             ),
                           ),
-
                           Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 15,
-                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
                             child: Text(
                               "OU",
                               style: TextStyle(
-                                color: darkColor
-                                    .withOpacity(0.6),
-                                fontWeight:
-                                FontWeight.w600,
+                                color: darkColor.withOpacity(0.6),
+                                fontWeight: FontWeight.w600,
                                 fontSize: 12,
                               ),
                             ),
                           ),
-
                           Expanded(
                             child: Divider(
-                              color: primaryColor
-                                  .withOpacity(0.3),
+                              color: primaryColor.withOpacity(0.3),
                               thickness: 1,
                             ),
                           ),
                         ],
                       ),
 
-                      const SizedBox(height: 25),
+                      SizedBox(height: screenHeight * 0.03),
 
+                      // Motif africain
                       Row(
-                        mainAxisAlignment:
-                        MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(
                           5,
-                              (index) => Padding(
-                            padding:
-                            const EdgeInsets.symmetric(
-                              horizontal: 4,
-                            ),
+                          (index) => Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4),
                             child: Container(
                               width: 6,
                               height: 6,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: primaryColor
-                                    .withOpacity(
-                                  0.3 + index * 0.15,
-                                ),
+                                color: primaryColor.withOpacity(0.3 + index * 0.15),
                               ),
                             ),
                           ),
                         ),
                       ),
 
-                      const SizedBox(height: 25),
+                      SizedBox(height: screenHeight * 0.03),
 
+                      // Lien création de compte
                       Row(
-                        mainAxisAlignment:
-                        MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             "Pas de compte ? ",
                             style: TextStyle(
-                              color:
-                              darkColor.withOpacity(0.8),
-                              fontSize: 15,
+                              color: darkColor.withOpacity(0.8),
+                              fontSize: screenWidth * 0.035,
                             ),
                           ),
-
                           GestureDetector(
                             onTap: () {
                               Navigator.pushNamed(
@@ -377,24 +451,21 @@ class _LoginScreenState extends State<LoginScreen>{
                                 AppRoutes.register,
                               );
                             },
-                            child: const Text(
+                            child: Text(
                               "Créer un compte",
                               style: TextStyle(
                                 color: primaryColor,
-                                fontWeight:
-                                FontWeight.bold,
-                                fontSize: 16,
-                                decoration:
-                                TextDecoration.underline,
-                                decorationColor:
-                                primaryColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: screenWidth * 0.04,
+                                decoration: TextDecoration.underline,
+                                decorationColor: primaryColor,
                               ),
                             ),
                           ),
                         ],
                       ),
 
-                      const SizedBox(height: 30),
+                      SizedBox(height: screenHeight * 0.04),
                     ],
                   ),
                 ),
@@ -407,27 +478,21 @@ class _LoginScreenState extends State<LoginScreen>{
   }
 }
 
-
-
-
 class AfricanPatternPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paintDiamond = Paint()
-      ..color =
-      const Color(0xFFD22922).withOpacity(0.04)
+      ..color = const Color(0xFFD22922).withOpacity(0.04)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
 
     final paintWave = Paint()
-      ..color =
-      const Color(0xFF6F1A2A).withOpacity(0.03)
+      ..color = const Color(0xFF6F1A2A).withOpacity(0.03)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.5;
 
     for (int i = 0; i < 40; i++) {
       final path = Path();
-
       final x = (i * 45.0) % size.width;
       final y = (i * 35.0) % size.height;
 
@@ -442,14 +507,10 @@ class AfricanPatternPainter extends CustomPainter {
 
     for (int i = 0; i < 20; i++) {
       final path = Path();
-
       final startY = i * 70.0;
 
       path.moveTo(0, startY);
-
-      for (double x = 0;
-      x < size.width;
-      x += 30) {
+      for (double x = 0; x < size.width; x += 30) {
         path.quadraticBezierTo(
           x + 15,
           startY + (x % 60 == 0 ? 20 : -20),
@@ -457,31 +518,22 @@ class AfricanPatternPainter extends CustomPainter {
           startY,
         );
       }
-
       canvas.drawPath(path, paintWave);
     }
 
     final paintDot = Paint()
-      ..color =
-      const Color(0xFFD22922).withOpacity(0.06)
+      ..color = const Color(0xFFD22922).withOpacity(0.06)
       ..style = PaintingStyle.fill;
 
     for (int i = 0; i < 100; i++) {
       final x = (i * 37.5) % size.width;
       final y = (i * 23.3) % size.height;
-
-      canvas.drawCircle(
-        Offset(x, y),
-        3,
-        paintDot,
-      );
+      canvas.drawCircle(Offset(x, y), 3, paintDot);
     }
   }
 
   @override
-  bool shouldRepaint(
-      covariant CustomPainter oldDelegate,
-      ) {
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return false;
   }
 }

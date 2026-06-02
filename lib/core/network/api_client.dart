@@ -9,7 +9,7 @@ class ApiClient{
     dio=Dio(
       BaseOptions(
         //URL du backend
-        baseUrl: "http://10.0.2.2:8081/api/",          //10.0.2.2
+        baseUrl: "http://localhost:8081/api/",          //10.0.2.2
 
         //Temps maximum d'attente
         connectTimeout: const Duration(seconds: 10),
