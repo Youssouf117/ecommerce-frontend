@@ -22,9 +22,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
 
   final _formKey =GlobalKey<FormState>();
 
-  final TextEditingController firstNameController=TextEditingController();
-
-  final TextEditingController lastNameController=TextEditingController();
+  final TextEditingController fulNameController=TextEditingController();
 
   final TextEditingController emailController=TextEditingController();
 
@@ -41,7 +39,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
           isLoading=true;
         });
 
-        final response=await authService.register(firstName: firstNameController.text.trim(), lastName: lastNameController.text.trim(), email: emailController.text.trim(), phone: phoneController.text.trim(), password: passwordController.text);
+        final response=await authService.register(fulName: fulNameController.text.trim(),email: emailController.text.trim(), phone: phoneController.text.trim(), password: passwordController.text);
 
         //Succes
         ScaffoldMessenger.of(context).showSnackBar(
@@ -191,29 +189,13 @@ class _RegisterScreenState extends State<RegisterScreen>{
                       const SizedBox(height: 40),
 
                       CustomTextField(
-                        hintText: "Prénom",
+                        hintText: "Nom complet",
                         controller:
-                        firstNameController,
+                        fulNameController,
                         validator: (value) {
                           if (value == null ||
                               value.isEmpty) {
-                            return "Veuillez entrer votre prénom";
-                          }
-
-                          return null;
-                        },
-                      ),
-
-                      const SizedBox(height: 20),
-
-                      CustomTextField(
-                        hintText: "Nom",
-                        controller:
-                        lastNameController,
-                        validator: (value) {
-                          if (value == null ||
-                              value.isEmpty) {
-                            return "Veuillez entrer votre nom";
+                            return "Veuillez entrer votre nom complet";
                           }
 
                           return null;
