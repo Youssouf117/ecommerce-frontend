@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen>{
         Navigator.pushReplacementNamed(context, AppRoutes.main);
       } catch(e){
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString()))
+          SnackBar(content: Text("Email ou mot de passe incorrect"))
         );
       } finally{
         setState(() {

@@ -46,7 +46,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
           SnackBar(content: Text(response.message))
         );
 
-        Navigator.pushReplacementNamed(context,AppRoutes.main);
+        Navigator.pushReplacementNamed(context,AppRoutes.login);
       } catch(e) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(e.toString())),
