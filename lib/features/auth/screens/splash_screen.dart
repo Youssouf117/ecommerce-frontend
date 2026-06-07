@@ -4,6 +4,7 @@ import 'package:ecommerce_mobile/core/services/storage_service.dart';
 import 'package:ecommerce_mobile/features/auth/services/auth_service.dart';
 import 'package:ecommerce_mobile/routes/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 const primaryColor = Color(0xFFD22922);
 const darkColor = Color(0xFF6F1A2A);
@@ -37,11 +38,24 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     String? token =await storageService.getToken();
     print("Token: $token");
 
-    if(token!=null){
-      Navigator.pushReplacementNamed(context, AppRoutes.main);
-    } else{
-      Navigator.pushReplacementNamed(context, AppRoutes.login);
+    if(token==null){
+      Navigator.pushReplacementNamed(context,AppRoutes.login);
+      return;
+      //Navigator.pushReplacementNamed(context, AppRoutes.main);
     }
+
+    if(JwtDecoder.isExpired(token)){
+      print("Token est non valide");
+      await storageService.removeToken();
+      Navigator.pushReplacementNamed(context, AppRoutes.login);
+      return;
+    }
+
+    if(!JwtDecoder.isExpired(token)){
+      print("Token valide");
+    }
+    Navigator.pushReplacementNamed(context, AppRoutes.main);
+
   }
 
   @override
