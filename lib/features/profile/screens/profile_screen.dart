@@ -1,3 +1,4 @@
+import 'package:ecommerce_mobile/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -5,9 +6,9 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
-        child: Text("Profile Page"),
+        child: Text('Profile'),
       ),
     );
   }

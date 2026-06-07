@@ -24,6 +24,11 @@ class AuthService{
 
       //Sauvegarder le Jwt
       await storageService.saveToken(authResponse.token);
+      print("Token : ${authResponse.token}");
+
+      await storageService.saveUserId(
+          authResponse.userResponse.id);
+      print("userId : ${authResponse.userResponse.id}");
 
       return authResponse;
     } on DioException catch(e){
@@ -51,7 +56,7 @@ class AuthService{
       final authResponse=AuthResponse.fromJson(response.data);
 
       //Sauvegarder le token
-      await storageService.saveToken(authResponse.token);
+      //await storageService.saveToken(authResponse.token);
 
       return authResponse;
     } on DioException catch(e){

@@ -35,6 +35,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
     //Verifier le token Jwt
     String? token =await storageService.getToken();
+    print("Token: $token");
 
     if(token!=null){
       Navigator.pushReplacementNamed(context, AppRoutes.main);

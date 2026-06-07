@@ -147,6 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> logoutUser() async {
     await storageService.removeToken();
+    await storageService.removeUserId();
     if (mounted) {
       Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (route) => false);
     }

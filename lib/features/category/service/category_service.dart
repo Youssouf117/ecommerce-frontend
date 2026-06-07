@@ -1,9 +1,9 @@
 import '../../../core/network/api_client.dart';
 import '../models/category_model.dart';
-
 class CategoryService {
 
   final ApiClient apiClient = ApiClient();
+
 
   Future<List<CategoryModel>> getCategories() async {
 
@@ -32,4 +32,5 @@ class CategoryService {
       );
     }
   }
+
 }
