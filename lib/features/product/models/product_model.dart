@@ -1,3 +1,5 @@
+import 'package:ecommerce_mobile/features/product/requests/product_status.dart';
+
 class ProductModel {
     final int id;
 
@@ -7,7 +9,7 @@ class ProductModel {
 
     final double price;
 
-    final String status;
+    final ProductStatus status;
 
     final String categoryName;
 
@@ -29,7 +31,7 @@ class ProductModel {
             name:json["name"],
             description: json["description"],
             price: json["price"].toDouble(),
-            status: json["status"],
+            status: productStatusFromString(json["status"]),
             categoryName: json["categoryName"],
             shopName: json["shopName"],
         );
