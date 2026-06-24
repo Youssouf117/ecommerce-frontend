@@ -25,7 +25,7 @@ class StorageService {
   }
 
   // User Id
-  Future<void> saveUserId(
+/*  Future<void> saveUserId(
       int userId) async {
     await storage.write(
       key: userIdKey,
@@ -49,5 +49,5 @@ class StorageService {
     await storage.delete(
       key: userIdKey,
     );
-  }
+  }*/
 }

@@ -1,9 +1,11 @@
 import 'package:ecommerce_mobile/core/widgets/custom_button.dart';
 import 'package:ecommerce_mobile/core/widgets/custom_textfield.dart';
+import 'package:ecommerce_mobile/features/auth/providers/auth_provider.dart';
 import 'package:ecommerce_mobile/features/auth/services/auth_service.dart';
 import 'package:ecommerce_mobile/features/auth/widgets/password_field.dart';
 import 'package:ecommerce_mobile/routes/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 const primaryColor = Color(0xFFD22922);
 const darkColor = Color(0xFF6F1A2A);
@@ -17,13 +19,8 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  bool isLoading = false;
-  String? errorMessage;
-  String? successMessage;
-
-  final AuthService authService = AuthService();
-
   final _formKey = GlobalKey<FormState>();
+  String? successMessage;
 
   final TextEditingController fulNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -33,32 +30,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Future<void> registerUser() async {
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        isLoading = true;
-        errorMessage = null;
-        successMessage = null;
-      });
-
-      try {
-        final response = await authService.register(
-          fulName: fulNameController.text.trim(),
-          email: emailController.text.trim(),
-          phone: phoneController.text.trim(),
-          password: passwordController.text,
-        );
-
-        setState(() {
-          successMessage = response.message;
-        });
-
-        if (mounted) {
+      final success =
+      await context
+          .read<AuthProvider>()
+          .register(
+        fulName: fulNameController.text.trim(),
+        email: emailController.text.trim(),
+        phone: phoneController.text.trim(),
+        password: passwordController.text,
+      );
+      if (success && mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Row(
                 children: [
                   const Icon(Icons.check_circle, color: Colors.white, size: 20),
                   const SizedBox(width: 10),
-                  Expanded(child: Text(response.message)),
+                  Expanded(child: Text("Inscription reussie")),
                 ],
               ),
               backgroundColor: primaryColor,
@@ -70,17 +58,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
           );
           Navigator.pushReplacementNamed(context, AppRoutes.login);
-        }
-      } catch (e) {
-        setState(() {
-          errorMessage = e.toString().replaceAll("Exception:", "").trim();
-        });
-      } finally {
-        if (mounted) {
-          setState(() {
-            isLoading = false;
-          });
-        }
       }
     }
   }
@@ -97,6 +74,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider =
+    context.watch<AuthProvider>();
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final isTablet = screenWidth >= 600;
@@ -231,7 +210,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       SizedBox(height: screenHeight * 0.04),
 
                       // Message d'erreur design
-                      if (errorMessage != null) ...[
+                      if (authProvider.errorMessage != null) ...[
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                           decoration: BoxDecoration(
@@ -259,7 +238,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Text(
-                                  errorMessage!,
+                                  authProvider.errorMessage!,
                                   style: const TextStyle(
                                     color: Colors.red,
                                     fontSize: 14,
@@ -269,9 +248,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  setState(() {
-                                    errorMessage = null;
-                                  });
+                                  context
+                                      .read<AuthProvider>()
+                                      .clearError();
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.all(4),
@@ -450,7 +429,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ],
                         ),
                         child: ElevatedButton(
-                          onPressed: isLoading ? null : registerUser,
+                          onPressed: authProvider.isLoading ? null : registerUser,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
                             shadowColor: Colors.transparent,
@@ -458,7 +437,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               borderRadius: BorderRadius.circular(30),
                             ),
                           ),
-                          child: isLoading
+                          child: authProvider.isLoading
                               ? const SizedBox(
                                   width: 24,
                                   height: 24,

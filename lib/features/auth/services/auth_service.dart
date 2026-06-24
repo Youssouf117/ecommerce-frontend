@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:ecommerce_mobile/core/network/api_client.dart';
 import 'package:ecommerce_mobile/core/services/storage_service.dart';
 import 'package:ecommerce_mobile/features/auth/models/auth_response.dart';
+import 'package:ecommerce_mobile/features/auth/models/user_response.dart';
 
 class AuthService{
   final StorageService storageService=StorageService();
@@ -26,8 +27,8 @@ class AuthService{
       await storageService.saveToken(authResponse.token);
       print("Token : ${authResponse.token}");
 
-      await storageService.saveUserId(
-          authResponse.userResponse.id);
+      /*await storageService.saveUserId(
+          authResponse.userResponse.id); */
       print("userId : ${authResponse.userResponse.id}");
 
       return authResponse;
@@ -39,8 +40,30 @@ class AuthService{
 
   }
 
+  Future<UserResponse> getCurrentUser() async {
+
+    try {
+
+      final response =
+      await apiClient.dio.get(
+        "auth/me",
+      );
+
+      return UserResponse.fromJson(
+        response.data,
+      );
+
+    } on DioException catch (e) {
+
+      throw Exception(
+        e.response?.data["message"] ??
+            "Erreur lors du chargement du profil",
+      );
+    }
+  }
+
   //Register
-  Future<AuthResponse> register({required String fulName,required String email,required String phone,required String password}) async {
+  Future<void> register({required String fulName,required String email,required String phone,required String password}) async {
     try{
       final response=await apiClient.dio.post(
         "auth/register",
@@ -53,12 +76,12 @@ class AuthService{
       );
 
       //Json --> objet Dart
-      final authResponse=AuthResponse.fromJson(response.data);
+      //final authResponse=AuthResponse.fromJson(response.data);
 
       //Sauvegarder le token
       //await storageService.saveToken(authResponse.token);
 
-      return authResponse;
+      //return authResponse;
     } on DioException catch(e){
       throw Exception(
         e.response?.data["message"] ?? "Erreur d'inscription"
