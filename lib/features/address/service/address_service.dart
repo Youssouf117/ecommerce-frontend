@@ -89,4 +89,33 @@ class AddressService {
   }
 
 
+  Future<List<AddressModel>>
+  getAddressesByUserId(int userId) async {
+
+    try {
+
+      final response =
+      await apiClient.dio.get(
+        "addresses/user/$userId",
+      );
+
+      final List<dynamic> data =
+          response.data;
+
+      return data
+          .map(
+            (address) =>
+            AddressModel.fromJson(address),
+      )
+          .toList();
+
+    } catch (e) {
+
+      throw Exception(
+        "Erreur lors du chargement des adresses",
+      );
+    }
+  }
+
+
 }
