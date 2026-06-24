@@ -42,7 +42,7 @@ class AuthProvider extends ChangeNotifier{
       notifyListeners();
       return true;
     } catch(e){
-      _errorMessage=e.toString();
+      _errorMessage="Email ou mot de passe incorrect"; //e.toString();
       notifyListeners();
       return false;
     } finally{
@@ -75,7 +75,7 @@ class AuthProvider extends ChangeNotifier{
 
     } catch (e) {
 
-      _errorMessage = e.toString();
+      _errorMessage = "Erreur lors de l'inscription";//e.toString();
 
       notifyListeners();
 
