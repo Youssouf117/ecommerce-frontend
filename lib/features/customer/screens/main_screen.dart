@@ -1,7 +1,7 @@
-import 'package:ecommerce_mobile/features/cart/screens/cart_screen.dart';
-import 'package:ecommerce_mobile/features/home/screens/home_screen.dart';
-import 'package:ecommerce_mobile/features/order/screens/order_screen.dart';
-import 'package:ecommerce_mobile/features/profile/screens/profile_screen.dart';
+import 'package:ecommerce_mobile/features/customer/screens/cart_screen.dart';
+import 'package:ecommerce_mobile/features/customer/screens/home_screen.dart';
+import 'package:ecommerce_mobile/features/customer/screens/order_screen.dart';
+import 'package:ecommerce_mobile/features/customer/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 const primaryColor = Color(0xFFD22922);

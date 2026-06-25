@@ -57,7 +57,39 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
     try{
       await context.read<AuthProvider>().loadCurrentUser();
-      Navigator.pushReplacementNamed(context, AppRoutes.main);
+      final authProvider=context.read<AuthProvider>();
+      final user=authProvider.currentUser;
+      switch(user?.role) {
+
+        case "CLIENT":
+          Navigator.pushReplacementNamed(
+            context,
+            AppRoutes.main,
+          );
+          break;
+
+        case "SELLER":
+          Navigator.pushReplacementNamed(
+            context,
+            AppRoutes.shopkeeperMain,
+          );
+          break;
+
+        case "ADMIN":
+          Navigator.pushReplacementNamed(
+            context,
+            AppRoutes.adminMain,
+          );
+          break;
+
+        default:
+          await storageService.removeToken();
+
+          Navigator.pushReplacementNamed(
+            context,
+            AppRoutes.login,
+          );
+      }
     } catch(e){
       await storageService.removeToken();
 

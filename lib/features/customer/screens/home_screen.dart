@@ -122,9 +122,9 @@ class _HomeScreenState extends State<HomeScreen>{
 }*/
 
 import 'package:ecommerce_mobile/core/services/storage_service.dart';
-import 'package:ecommerce_mobile/features/home/widgets/category_card.dart';
-import 'package:ecommerce_mobile/features/home/widgets/product_card.dart';
-import 'package:ecommerce_mobile/features/home/widgets/search_bar_widget.dart';
+import 'package:ecommerce_mobile/features/customer/widgets/category_card.dart';
+import 'package:ecommerce_mobile/features/customer/widgets/product_card.dart';
+import 'package:ecommerce_mobile/features/customer/widgets/search_bar_widget.dart';
 import 'package:ecommerce_mobile/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

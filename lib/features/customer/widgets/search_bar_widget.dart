@@ -18,11 +18,11 @@ class SearchBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding:
-          const EdgeInsets.symmetric(horizontal: 5),
+      const EdgeInsets.symmetric(horizontal: 5),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius:
-            BorderRadius.circular(30),
+        BorderRadius.circular(30),
         border: Border.all(
           color: primaryColor.withOpacity(0.1),
           width: 1,
@@ -30,7 +30,7 @@ class SearchBarWidget extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color:
-                Colors.black.withOpacity(0.08),
+            Colors.black.withOpacity(0.08),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -40,7 +40,7 @@ class SearchBarWidget extends StatelessWidget {
         children: [
           Container(
             margin:
-                const EdgeInsets.only(left: 8),
+            const EdgeInsets.only(left: 8),
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
@@ -51,7 +51,7 @@ class SearchBarWidget extends StatelessWidget {
                 ],
                 begin: Alignment.topLeft,
                 end:
-                    Alignment.bottomRight,
+                Alignment.bottomRight,
               ),
               boxShadow: [
                 BoxShadow(
@@ -59,7 +59,7 @@ class SearchBarWidget extends StatelessWidget {
                       .withOpacity(0.3),
                   blurRadius: 6,
                   offset:
-                      const Offset(0, 2),
+                  const Offset(0, 2),
                 ),
               ],
             ),
@@ -80,16 +80,16 @@ class SearchBarWidget extends StatelessWidget {
                 color: darkColor,
               ),
               decoration:
-                  const InputDecoration(
+              const InputDecoration(
                 hintText:
-                    "Rechercher un produit...",
+                "Rechercher un produit...",
                 hintStyle: TextStyle(
                   color: Colors.grey,
                   fontSize: 14,
                 ),
                 border: InputBorder.none,
                 contentPadding:
-                    EdgeInsets.symmetric(
+                EdgeInsets.symmetric(
                   vertical: 15,
                 ),
               ),
@@ -100,7 +100,7 @@ class SearchBarWidget extends StatelessWidget {
 
           Container(
             margin:
-                const EdgeInsets.only(right: 8),
+            const EdgeInsets.only(right: 8),
             child: IconButton(
               onPressed: onSearch,
               icon: const Icon(
