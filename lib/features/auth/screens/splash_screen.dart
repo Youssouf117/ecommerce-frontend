@@ -38,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
     //Verifier le token Jwt
     String? token =await storageService.getToken();
-    print("Token: $token");
+    print("Token dans startSplash: $token");
 
     if(token==null){
       Navigator.pushReplacementNamed(context,AppRoutes.login);
@@ -59,6 +59,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       await context.read<AuthProvider>().loadCurrentUser();
       final authProvider=context.read<AuthProvider>();
       final user=authProvider.currentUser;
+      print('Dans startSplash,on a: ${user}');
+      print('Dans startSplash, id est : ${user?.id}');
+      print('Dans startSplash, role est : ${user?.role}');
       switch(user?.role) {
 
         case "CLIENT":

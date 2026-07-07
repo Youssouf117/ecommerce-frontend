@@ -19,16 +19,20 @@ class AuthService{
           "password":password
         }
       );
+      if(response.statusCode==200){
+        print("Backend valide avec le code 200");
+      }
+      else{
+        print("Backend non valide, le code n'est pas 200");
+      }
 
       //Convertir Json ---> objet Dart
       final authResponse=AuthResponse.fromJson(response.data);
+      print("message : ${authResponse.message}");
 
       //Sauvegarder le Jwt
       await storageService.saveToken(authResponse.token);
       print("Token : ${authResponse.token}");
-
-      /*await storageService.saveUserId(
-          authResponse.userResponse.id); */
       print("userId : ${authResponse.userResponse.id}");
 
       return authResponse;
@@ -48,10 +52,20 @@ class AuthService{
       await apiClient.dio.get(
         "auth/me",
       );
-
-      return UserResponse.fromJson(
+      if(response.statusCode==200){
+        print("Backend valide getCurrentUser avec le code 200");
+      }
+      else{
+        print("Backend non valide getCurrentUser, le code n'est pas 200");
+      }
+      UserResponse UserCurrent=UserResponse.fromJson(
         response.data,
       );
+      print('Dans getCurrentUser,on a est : ${UserCurrent}');
+      print('Dans getCurrentUser, id est : ${UserCurrent.id}');
+      print('Dans getCurrentUser, role est : ${UserCurrent.role}');
+
+      return UserCurrent;
 
     } on DioException catch (e) {
 
@@ -65,7 +79,7 @@ class AuthService{
   //Register
   Future<void> register({required String fulName,required String email,required String phone,required String password}) async {
     try{
-      final response=await apiClient.dio.post(
+      await apiClient.dio.post(
         "auth/register",
         data: {
           "fulName":fulName,
@@ -74,14 +88,6 @@ class AuthService{
           "password":password
         }
       );
-
-      //Json --> objet Dart
-      //final authResponse=AuthResponse.fromJson(response.data);
-
-      //Sauvegarder le token
-      //await storageService.saveToken(authResponse.token);
-
-      //return authResponse;
     } on DioException catch(e){
       throw Exception(
         e.response?.data["message"] ?? "Erreur d'inscription"

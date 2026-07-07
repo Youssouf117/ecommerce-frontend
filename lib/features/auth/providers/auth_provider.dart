@@ -38,7 +38,14 @@ class AuthProvider extends ChangeNotifier{
       final response=await authService.login(email: email, password: password);
 
       _authResponse=response;
+      print("Dans provider: authResponse est: ${_authResponse}");
+      print("Dans provider: authResponse message est: ${_authResponse?.message}");
       _currentUser=response.userResponse;
+      print("Dans provider: currentUser est: ${_currentUser}");
+      print("Dans provider: currentUser id est: ${_currentUser?.id}");
+      print("Dans provider: currentUser role est: ${_currentUser?.role}");
+
+
       notifyListeners();
       return true;
     } catch(e){

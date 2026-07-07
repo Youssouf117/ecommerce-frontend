@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:ecommerce_mobile/features/category/requests/create_category_request.dart';
 import 'package:ecommerce_mobile/features/category/requests/update_category_request.dart';
 
@@ -51,28 +52,33 @@ class CategoryService {
   }
 
 
-  Future<CategoryModel> createCategory(CreateCategoryRequest request) async{
+  Future<void> createCategory(CreateCategoryRequest request) async{
     try{
-      final response=await apiClient.dio.post(
+      await apiClient.dio.post(
         "categories",
         data: request.toJson()
       );
+    } on DioException catch(e){
+      final status = e.response?.statusCode;
 
-      return CategoryModel.fromJson(response.data);
-    } catch(e){
-      throw Exception("Erreur lors de la creation de la categorie");
+      if (status == 400) {
+        throw Exception("Données invalides");
+      } else if (status == 403) {
+        throw Exception("Accès refusé");
+      } else {
+        throw Exception("Erreur réseau ou serveur");
+      }
     }
   }
 
 
-  Future<CategoryModel> updateCategory(int categoryId,UpdateCategoryRequest request) async{
+  Future<void> updateCategory(int categoryId,UpdateCategoryRequest request) async{
     try{
-      final response=await apiClient.dio.put(
+      await apiClient.dio.put(
         "categories/$categoryId",
         data: request.toJson()
       );
 
-      return CategoryModel.fromJson(response.data);
     } catch(e){
       throw Exception("Erreur lors de la modification de la categorie");
     }

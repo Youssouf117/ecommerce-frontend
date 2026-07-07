@@ -4,6 +4,8 @@ import 'package:ecommerce_mobile/features/auth/screens/forgot_password_screen.da
 import 'package:ecommerce_mobile/features/auth/screens/login_screen.dart';
 import 'package:ecommerce_mobile/features/auth/screens/register_screen.dart';
 import 'package:ecommerce_mobile/features/auth/screens/splash_screen.dart';
+import 'package:ecommerce_mobile/features/category/screens/create_category_screen.dart';
+import 'package:ecommerce_mobile/features/category/screens/update_category_screen.dart';
 import 'package:ecommerce_mobile/features/customer/screens/home_screen.dart';
 import 'package:ecommerce_mobile/features/customer/screens/main_screen.dart';
 import 'package:ecommerce_mobile/features/shopkeeper/screens/shopkeeper_main_screen.dart';
@@ -40,6 +42,11 @@ class MyApp extends StatelessWidget{
 
         //admin
         AppRoutes.adminMain:(context) =>AdminMainScreen(),
+        AppRoutes.createCategory: (context) =>
+        const CreateCategoryScreen(),
+
+        AppRoutes.updateCategory: (context) =>
+        const UpdateCategoryScreen(),
 
       },
     );

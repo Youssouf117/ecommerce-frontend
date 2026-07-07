@@ -1,3 +1,4 @@
+import 'package:ecommerce_mobile/core/services/storage_service.dart';
 import 'package:ecommerce_mobile/core/widgets/custom_button.dart';
 import 'package:ecommerce_mobile/core/widgets/custom_textfield.dart';
 import 'package:ecommerce_mobile/features/auth/providers/auth_provider.dart';
@@ -19,7 +20,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
+  final StorageService storageService=StorageService();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -35,27 +36,93 @@ class _LoginScreenState extends State<LoginScreen> {
         );
 
         if (success && mounted) {
-          final authResponse =
-              context.read<AuthProvider>()
-                  .authResponse;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Row(
-                children: [
-                  const Icon(Icons.check_circle, color: Colors.white, size: 20),
-                  const SizedBox(width: 10),
-                  Expanded(child: Text('Connexion reussie')),
-                ],
-              ),
-              backgroundColor: primaryColor,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              duration: const Duration(seconds: 2),
-            ),
-          );
-          Navigator.pushReplacementNamed(context, AppRoutes.main);
+          final authProvider=context.read<AuthProvider>();
+          final user=authProvider.currentUser;
+          print('Dans loginUser user est: ${user}');
+          print('Dans loginUser user id est: ${user?.id}');
+          print('Dans loginUser user role est: ${user?.role}');
+          switch(user?.role) {
+
+            case "CLIENT":
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Row(
+                    children: [
+                      const Icon(Icons.check_circle, color: Colors.white, size: 20),
+                      const SizedBox(width: 10),
+                      Expanded(child: Text('Connexion reussie')),
+                    ],
+                  ),
+                  backgroundColor: primaryColor,
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+              Navigator.pushReplacementNamed(
+                context,
+                AppRoutes.main,
+              );
+              break;
+
+            case "SELLER":
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Row(
+                    children: [
+                      const Icon(Icons.check_circle, color: Colors.white, size: 20),
+                      const SizedBox(width: 10),
+                      Expanded(child: Text('Connexion reussie')),
+                    ],
+                  ),
+                  backgroundColor: primaryColor,
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+              Navigator.pushReplacementNamed(
+                context,
+                AppRoutes.shopkeeperMain,
+              );
+              break;
+
+            case "ADMIN":
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Row(
+                    children: [
+                      const Icon(Icons.check_circle, color: Colors.white, size: 20),
+                      const SizedBox(width: 10),
+                      Expanded(child: Text('Connexion reussie')),
+                    ],
+                  ),
+                  backgroundColor: primaryColor,
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+              Navigator.pushReplacementNamed(
+                context,
+                AppRoutes.adminMain,
+              );
+              break;
+
+            default:
+              await storageService.removeToken();
+
+              Navigator.pushReplacementNamed(
+                context,
+                AppRoutes.login,
+              );
+          }
         }
 
     }
@@ -271,9 +338,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           if (value == null || value.isEmpty) {
                             return "Email obligatoire";
                           }
-                          if (!value.contains('@')) {
+                          /*if (!value.contains('@')) {
                             return "Email invalide";
-                          }
+                          }*/
                           return null;
                         },
                       ),

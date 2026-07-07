@@ -20,5 +20,7 @@ class AppRoutes{
 
   //admin
   static const adminMain="/admin-main";
+  static const createCategory = "/create-category";
+  static const updateCategory = "/update-category";
 
 }

@@ -6,6 +6,8 @@ class CategoryModel {
 
   final String description;
 
+  final String icon;
+
   const CategoryModel({
 
     required this.id,
@@ -13,6 +15,8 @@ class CategoryModel {
     required this.name,
 
     required this.description,
+
+    required this.icon
   });
 
   factory CategoryModel.fromJson(
@@ -25,6 +29,8 @@ class CategoryModel {
       name: json['name'],
 
       description: json['description'],
+
+      icon: json['icon']
     );
   }
 }

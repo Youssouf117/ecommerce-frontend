@@ -1,4 +1,5 @@
 import 'package:ecommerce_mobile/features/category/models/category_model.dart';
+import 'package:ecommerce_mobile/features/category/requests/create_category_request.dart';
 import 'package:ecommerce_mobile/features/category/service/category_service.dart';
 import 'package:flutter/material.dart';
 
@@ -31,6 +32,30 @@ class CategoryProvider extends ChangeNotifier{
       _setLoading(false);
     }
   }
+
+  Future<bool> createCategory(
+      CreateCategoryRequest request) async {
+    try {
+      _setLoading(true);
+      _errorMessage = null;
+
+      await categoryService.createCategory(request);
+
+      notifyListeners();
+
+      return true;
+    } catch (e) {
+      _errorMessage = e.toString();
+
+      notifyListeners();
+
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+
 
   void clearError(){
     _errorMessage=null;
