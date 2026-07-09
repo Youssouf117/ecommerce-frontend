@@ -23,4 +23,7 @@ class AppRoutes{
   static const createCategory = "/create-category";
   static const updateCategory = "/update-category";
 
+  //Seller
+static const createShop="/create-shop";
+
 }

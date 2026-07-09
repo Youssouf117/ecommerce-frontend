@@ -1,3 +1,4 @@
+import 'package:ecommerce_mobile/features/shop/models/request/create_shop_request.dart';
 import 'package:flutter/material.dart';
 
 import '../models/shop_model.dart';
@@ -91,5 +92,18 @@ class ShopProvider extends ChangeNotifier {
     _errorMessage = null;
 
     notifyListeners();
+  }
+
+  Future<void> createShop(CreateShopRequest request) async{
+    try{
+      _setLoading(true);
+      _errorMessage=null;
+      await shopService.createShop(request);
+    } catch(e){
+      _errorMessage=e.toString();
+      notifyListeners();
+    } finally{
+      _setLoading(false);
+    }
   }
 }

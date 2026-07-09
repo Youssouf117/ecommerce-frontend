@@ -8,6 +8,7 @@ import 'package:ecommerce_mobile/features/category/screens/create_category_scree
 import 'package:ecommerce_mobile/features/category/screens/update_category_screen.dart';
 import 'package:ecommerce_mobile/features/customer/screens/home_screen.dart';
 import 'package:ecommerce_mobile/features/customer/screens/main_screen.dart';
+import 'package:ecommerce_mobile/features/shop/screns/create_shop_screen.dart';
 import 'package:ecommerce_mobile/features/shopkeeper/screens/shopkeeper_main_screen.dart';
 import 'package:ecommerce_mobile/routes/app_routes.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget{
 
         //shopkeeper
         AppRoutes.shopkeeperMain:(context) => ShopkeeperMainScreen(),
+        AppRoutes.createShop:(context) => CreateShopScreen(),
 
 
         //admin
@@ -47,6 +49,8 @@ class MyApp extends StatelessWidget{
 
         AppRoutes.updateCategory: (context) =>
         const UpdateCategoryScreen(),
+
+
 
       },
     );

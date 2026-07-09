@@ -31,13 +31,12 @@ class ShopService{
         }
     }
 
-    Future<ShopModel> createShop(CreateShopRequest request) async {
+    Future<void> createShop(CreateShopRequest request) async {
         try{
-            final response=await apiClient.dio.post(
+            await apiClient.dio.post(
                 "shops",
                 data: request.toJson()
             );
-            return ShopModel.fromJson(response.data);
 
         } catch(e){
             throw Exception("Erreur lors de la creation de la boutique");

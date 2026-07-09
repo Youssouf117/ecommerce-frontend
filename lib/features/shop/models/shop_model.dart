@@ -9,15 +9,12 @@ class ShopModel{
 
     final String status;
 
-    final int addressId;
-
     const ShopModel({
         required this.id,
         required this.name,
         required this.description,
         required this.logo,
         required this.status,
-        required this.addressId
     });
 
     factory ShopModel.fromJson(Map<String,dynamic> json){
@@ -27,7 +24,6 @@ class ShopModel{
             description: json["description"],
             logo: json["logo"],
             status: json["status"],
-            addressId: json["addressId"],
         );
     }
 }
